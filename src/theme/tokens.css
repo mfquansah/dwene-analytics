@@ -1,0 +1,22 @@
+/*
+ * Design tokens. PLACEHOLDER values estimated from a low-resolution mockup
+ * (indigo accent, cool neutrals). Replace with exact values from the design
+ * file; nothing else in the app should hard-code colors.
+ */
+:root {
+  --color-bg: #f7f7f9;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-accent: #5b4bdb;
+  --color-accent-contrast: #ffffff;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-treated: #5b4bdb;
+  --color-comparison: #9ca3af;
+
+  --font-sans: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius: 8px;
+  --sidebar-width: 220px;
+}

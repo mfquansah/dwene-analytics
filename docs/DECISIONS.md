@@ -17,19 +17,23 @@ _Last updated: 2026-11-11_
 | 2026-11-11 | Frontend: React + Vite + TypeScript | User approved |
 | 2026-11-11 | Persistence: saved experiments and lesson progress survive refresh, via browser local storage (not cookies: 4 KB limit, sent on every request) | User chose local storage or cookies; local storage picked for technical reasons |
 | 2026-11-11 | Sandbox first entry: short guided walkthrough | User |
+| 2026-11-11 | Charts: Recharts. Router: React Router | User approved |
+| 2026-11-11 | Sandbox parameters: effect size, noise, baseline group difference, trend difference, units per group, periods, treatment start, seed | User approved |
+| 2026-11-11 | Theme: follow the mockups (indigo accent), overriding the brief's warm grey + orange | User |
+| 2026-11-11 | Lesson plan to be created together with the user | User |
 
 ## Work completed
 
 - Repo inspected: empty, no prior code.
 - Draft `docs/PRD.md` (open items flagged).
 - Draft `docs/DEVELOPMENT_PLAN.md`.
+- Phase 0: Vite + React + TS scaffold, Vitest, router shell, placeholder tokens.
 
 ## Still being explored
 
-- Chart library, router, lesson format (proposals in DEVELOPMENT_PLAN.md)
+- Lesson format (proposed: MDX) and lesson plan
 - Hosting (proposed: static host; not yet confirmed)
-- Design tokens: mockup palette conflicts with brief's theme direction (see PRD §6)
+- Exact design token values (need higher-res mockups or design file)
 - Content of the guided walkthrough steps
 - Lesson content: authorship and count for 1.0
-- Exact Sandbox parameter list
 - Whether to keep the stats module interface narrow so a Python backend can replace it later (proposed: yes)
