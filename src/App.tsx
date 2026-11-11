@@ -1,3 +1,6 @@
+import { Designer } from './features/lab/Designer'
+import { Home } from './features/home/Home'
+import { ResultsDetail, ResultsList } from './features/results/Results'
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
 
 const nav = [
@@ -27,10 +30,11 @@ export default function App() {
         </aside>
         <main className="main">
           <Routes>
-            <Route path="/" element={<Placeholder title="Home" />} />
+            <Route path="/" element={<Home />} />
             <Route path="/learn" element={<Placeholder title="Learn" />} />
-            <Route path="/lab" element={<Placeholder title="Lab" />} />
-            <Route path="/results" element={<Placeholder title="Results" />} />
+            <Route path="/lab" element={<Designer />} />
+            <Route path="/results" element={<ResultsList />} />
+            <Route path="/results/:id" element={<ResultsDetail />} />
           </Routes>
         </main>
       </div>
