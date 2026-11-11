@@ -27,9 +27,13 @@ _Last updated: 2026-11-11_
 - Repo inspected: empty, no prior code.
 - Draft `docs/PRD.md` (open items flagged).
 - Draft `docs/DEVELOPMENT_PLAN.md`.
+- Phase 1: stats core (`src/stats`): seeded generator, DiD estimator with unit-clustered SEs, parallel-trends test; 30 tests incl. cross-check against statsmodels.
 - Phase 0: Vite + React + TS scaffold, Vitest, router shell, placeholder tokens.
 
 ## Still being explored
+
+- Added optional generator parameters beyond the approved list, defaulted so the approved list still works alone: `commonTrend` (0.5), `baselineLevel` (10), `unitEffectSd` (0). Confirm or remove.
+- Estimator choices to confirm: SEs clustered by unit with t(G-1) inference (matches Stata/statsmodels); parallel-trends test is a pre-period slope-difference test (not proof of parallel trends).
 
 - Lesson format (proposed: MDX) and lesson plan
 - Hosting (proposed: static host; not yet confirmed)

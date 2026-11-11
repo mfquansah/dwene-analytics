@@ -1,0 +1,6 @@
+export * from './types'
+export { createRng, type Rng } from './rng'
+export { generateData, validateParams } from './generate'
+export { estimateDiD, testParallelTrends, cellMeans } from './did'
+export type { DidResult, CellMeans, ParallelTrendsResult } from './did'
+export type { Coefficient } from './ols'
