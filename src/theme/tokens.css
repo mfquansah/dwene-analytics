@@ -1,22 +1,54 @@
 /*
- * Design tokens. PLACEHOLDER values estimated from a low-resolution mockup
- * (indigo accent, cool neutrals). Replace with exact values from the design
- * file; nothing else in the app should hard-code colors.
+ * Design tokens, sampled from the design mockups (Experiment Lab, 2000px exports).
+ * Change the look of the whole app here; nothing else hard-codes colors.
  */
 :root {
-  --color-bg: #f7f7f9;
+  /* Surfaces */
+  --color-bg: #f8fafb;
   --color-surface: #ffffff;
-  --color-border: #e5e7eb;
-  --color-text: #111827;
-  --color-text-muted: #6b7280;
-  --color-accent: #5b4bdb;
-  --color-accent-contrast: #ffffff;
-  --color-success: #15803d;
-  --color-warning: #b45309;
-  --color-treated: #5b4bdb;
-  --color-comparison: #9ca3af;
+  --color-border: #ebedee;
+  --color-border-strong: #dde4ef;
 
-  --font-sans: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --radius: 8px;
-  --sidebar-width: 220px;
+  /* Text */
+  --color-text: #111219;
+  --color-text-2: #4b4c53;
+  --color-text-muted: #64686e;
+
+  /* Accent (indigo) */
+  --color-accent: #5b52db;
+  --color-accent-hover: #4f46c9;
+  --color-accent-contrast: #ffffff;
+  --color-accent-ink: #4c449d;      /* text on tinted accent surfaces, links */
+  --color-accent-tint: #f1f0ff;     /* tags, active nav */
+  --color-accent-wash: #f7f5ff;     /* large cards (Learn mode, takeaway) */
+  --color-accent-track: #e7e3fb;    /* progress track */
+
+  /* Data colors */
+  --color-treated: #5950e0;
+  --color-comparison: #8fbdf6;
+  --color-comparison-wash: #f2f8ff; /* Lab mode card, control group */
+  --color-comparison-tint: #ebf5ff;
+  --color-comparison-ink: #1f437b;
+  --color-counterfactual: #167139;
+
+  /* Status */
+  --color-success: #167139;
+  --color-success-tint: #eaf7ee;
+  --color-warning: #704800;
+  --color-warning-text: #aa7b2b;
+  --color-warning-tint: #fff4e4;
+  --color-warning-wash: #fef9ed;
+  --color-warning-border: #f0e7d6;
+  --color-danger: #b42318;
+
+  /* Type */
+  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(17, 18, 25, 0.03);
+  --sidebar-width: 224px;
 }

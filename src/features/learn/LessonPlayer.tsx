@@ -1,8 +1,9 @@
-import { useState, type ReactElement } from 'react'
+import { ArrowRight, Check, Lightbulb } from 'lucide-react'
+import { useState, type ReactElement, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { store, useAppState } from '../../storage/store'
 import type { StepStatus } from '../../storage/types'
-import { ALL_LESSONS } from './content'
+import { ALL_LESSONS, DID_COURSE } from './content'
 import { challengeScore, firstIncomplete, isLessonComplete } from './grading'
 import { ChoiceView, ExploreView, NumericView, ReadView, SimulationView, StudyView } from './Steps'
 import type { Step } from './types'
@@ -41,12 +42,12 @@ function Player({ lessonId }: { lessonId: string | undefined }) {
     const preset = lesson.sandboxPreset && new URLSearchParams(Object.entries(lesson.sandboxPreset).map(([k, v]) => [k, String(v)])).toString()
     const assisted = lesson.steps.filter((s) => done?.[s.id] === 'revealed').length
     return (
-      <div className="page narrow">
-        <p className="muted small">{kicker}</p>
-        <h1>{challenge ? 'Challenge complete' : `Lesson complete: ${lesson.title}`}</h1>
+      <LessonLayout currentId={lesson.lessonId}>
+        <p className="eyebrow">{kicker}</p>
+        <h1 className="lesson-title">{challenge ? 'Challenge complete' : `Lesson complete: ${lesson.title}`}</h1>
         {challenge && <ChallengeResult lessonId={lesson.lessonId} />}
         {!challenge && assisted > 0 && <p className="muted">You revealed {assisted} answer{assisted > 1 ? 's' : ''}. Replaying the lesson is a good way to lock them in.</p>}
-        <section className="card"><h2>Key takeaway</h2><p>{lesson.takeaway}</p></section>
+        <section className="callout takeaway"><span className="takeaway-icon"><Lightbulb size={18} aria-hidden="true" /></span><div><h3>Key takeaway</h3><p>{lesson.takeaway}</p></div></section>
         <section className="card">
           <h2>Key ideas</h2>
           <dl className="concepts">{lesson.concepts.map((c) => <div key={c.term}><dt>{c.term}</dt><dd>{c.definition}</dd></div>)}</dl>
@@ -58,7 +59,7 @@ function Player({ lessonId }: { lessonId: string | undefined }) {
           <button className="btn ghost" onClick={() => { store.resetLesson(lesson.lessonId); setIdx(0); setSummary(false) }}>{challenge ? 'Retake the challenge' : 'Restart lesson'}</button>
           <Link className="btn ghost" to="/learn">All lessons</Link>
         </div>
-      </div>
+      </LessonLayout>
     )
   }
 
@@ -73,10 +74,10 @@ function Player({ lessonId }: { lessonId: string | undefined }) {
   const continueLabel = isLast ? (challenge ? 'Finish challenge' : 'Finish lesson') : 'Continue'
 
   return (
-    <div className="page narrow">
-      <p className="muted small">{kicker} · {lesson.durationMinutes} min · <Link to="/learn" className="link">All lessons</Link></p>
-      <h1>{lesson.title}</h1>
-      <p className="muted"><b>Goal:</b> {lesson.objective}</p>
+    <LessonLayout currentId={lesson.lessonId}>
+      <div className="row between center"><p className="eyebrow">{kicker} · {lesson.durationMinutes} min</p><Link to="/learn" className="link">Exit course</Link></div>
+      <h1 className="lesson-title">{lesson.title}</h1>
+      <p className="lead">{lesson.objective}</p>
       <div className="progress" role="progressbar" aria-valuemin={1} aria-valuemax={lesson.steps.length} aria-valuenow={idx + 1} aria-label="Progress">
         {lesson.steps.map((s, i) => <span key={s.id} className={`dot${i === idx ? ' current' : done?.[s.id] ? ' done' : ''}`} />)}
       </div>
@@ -89,12 +90,59 @@ function Player({ lessonId }: { lessonId: string | undefined }) {
       <div className="row between">
         <button className="btn ghost" disabled={idx === 0} onClick={() => setIdx(idx - 1)}>Back</button>
         {step.kind === 'read' || step.kind === 'study' ? (
-          <button className="btn primary" onClick={() => { if (!status) onDone('done'); advance(true) }}>{continueLabel}</button>
+          <button className="btn primary" onClick={() => { if (!status) onDone('done'); advance(true) }}>{continueLabel}<ArrowRight size={16} aria-hidden="true" /></button>
         ) : (
-          <button className="btn primary" disabled={!status} onClick={() => advance(!!status)}>{continueLabel}</button>
+          <button className="btn primary" disabled={!status} onClick={() => advance(!!status)}>{continueLabel}<ArrowRight size={16} aria-hidden="true" /></button>
         )}
       </div>
+    </LessonLayout>
+  )
+}
+
+function LessonLayout({ currentId, children }: { currentId: string; children: ReactNode }) {
+  return (
+    <div className="lesson-layout">
+      <CourseRail currentId={currentId} />
+      <div className="lesson-main">{children}</div>
     </div>
+  )
+}
+
+/** Left panel: the course outline with per-lesson status. */
+function CourseRail({ currentId }: { currentId: string }) {
+  const { lessonProgress } = useAppState()
+  const stepsOf = (id: string) => lessonProgress[id]?.steps
+  const completed = DID_COURSE.filter((l) => isLessonComplete(l, stepsOf(l.lessonId))).length
+  const minutes = DID_COURSE.reduce((t, l) => t + l.durationMinutes, 0)
+  const challengeOpen = currentId !== 'did-challenge'
+  return (
+    <nav className="course-rail" aria-label="Course outline">
+      <p className="crumbs">Learn / Course</p>
+      <h2 className="rail-title">Difference-in-differences</h2>
+      <p className="muted small">{DID_COURSE.length} lessons · {minutes} min</p>
+      <div className="bar rail-bar" role="progressbar" aria-valuemin={0} aria-valuemax={DID_COURSE.length} aria-valuenow={completed} aria-label="Course progress"><span style={{ width: `${(100 * completed) / DID_COURSE.length}%` }} /></div>
+      <ol className="rail-list">
+        {DID_COURSE.map((l, i) => {
+          const done = isLessonComplete(l, stepsOf(l.lessonId))
+          const started = Object.keys(stepsOf(l.lessonId) ?? {}).length > 0
+          const current = l.lessonId === currentId
+          return (
+            <li key={l.lessonId}>
+              <Link to={`/learn/${l.lessonId}`} className={`rail-item${current ? ' current' : ''}`} aria-current={current ? 'step' : undefined}>
+                <span className={`rail-num${done ? ' done' : ''}`}>{done ? <Check size={15} strokeWidth={2.5} aria-label="Complete" /> : i + 1}</span>
+                <span><span className="rail-name">{l.title}</span><span className="muted small rail-sub">{l.durationMinutes} min{done ? ' · complete' : started ? ' · in progress' : ''}</span></span>
+              </Link>
+            </li>
+          )
+        })}
+      </ol>
+      {challengeOpen && (
+        <Link to="/learn/did-challenge" className="rail-note">
+          <b>Final challenge</b>
+          <span className="muted small">Three new cases, no hints. Best after lesson {DID_COURSE.length}.</span>
+        </Link>
+      )}
+    </nav>
   )
 }
 

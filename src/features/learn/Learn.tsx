@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAppState } from '../../storage/store'
 import { DID_CHALLENGE, DID_COURSE } from './content'
@@ -19,8 +20,9 @@ export function Learn() {
           const label = isDone ? 'Review' : count > 0 ? 'Continue' : 'Start'
           return (
             <li key={l.lessonId} className="card lesson-card">
-              <div>
-                <div className="muted small">Lesson {i + 1} · {l.durationMinutes} min · {isDone ? 'Complete' : count > 0 ? `${count} of ${l.steps.length} steps` : 'Not started'}</div>
+              <span className={`rail-num big-num${isDone ? ' done' : ''}`}>{isDone ? <Check size={18} strokeWidth={2.5} aria-label="Complete" /> : i + 1}</span>
+              <div className="lesson-card-body">
+                <div className="row center wrap tight-row"><span className="muted small">{l.durationMinutes} min</span><span className={`pill ${isDone ? 'green' : count > 0 ? 'indigo' : ''}`}>{isDone ? 'Complete' : count > 0 ? `${count} of ${l.steps.length} steps` : 'Not started'}</span></div>
                 <h2>{l.title}</h2>
                 <p className="muted">{l.objective}</p>
               </div>
@@ -44,8 +46,8 @@ function Challenge() {
   const status = isDone ? `Complete: ${score.firstTry} of ${score.graded} on the first try` : count > 0 ? `${count} of ${DID_CHALLENGE.steps.length} steps` : course === DID_COURSE.length ? 'Ready' : 'Best after lesson 5'
   return (
     <section className="card lesson-card challenge-card" aria-labelledby="challenge-title">
-      <div>
-        <div className="muted small">Final challenge · {DID_CHALLENGE.durationMinutes} min · {status}</div>
+      <div className="lesson-card-body">
+        <div className="row center wrap tight-row"><span className="muted small">Final challenge · {DID_CHALLENGE.durationMinutes} min</span><span className={`pill ${isDone ? 'green' : count > 0 ? 'indigo' : 'amber'}`}>{status}</span></div>
         <h2 id="challenge-title">{DID_CHALLENGE.title}</h2>
         <p className="muted">{DID_CHALLENGE.objective}</p>
       </div>

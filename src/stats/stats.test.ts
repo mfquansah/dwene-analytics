@@ -60,6 +60,8 @@ describe('generateData', () => {
     expect(() => generateData({ ...base, treatmentStart: 0 })).toThrow()
     expect(() => generateData({ ...base, treatmentStart: 8 })).toThrow()
     expect(() => generateData({ ...base, unitsPerGroup: 1 })).toThrow()
+    expect(() => generateData({ ...base, unitsPerGroup: 501 })).toThrow()
+    expect(() => generateData({ ...base, periods: 61 })).toThrow()
     expect(() => generateData({ ...base, noise: -1 })).toThrow()
     expect(() => generateData({ ...base, effectSize: NaN })).toThrow()
   })

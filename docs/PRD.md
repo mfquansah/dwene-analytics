@@ -32,7 +32,7 @@ The mockup contains five screens, currently framed around randomized A/B testing
 |---|---|---|
 | 1 | Home / Experiment Lab: hero, Learn Mode and Lab Mode cards, recent experiments, methods library | Methods library shows DiD as the available method; others as "coming later" **[TBD]**. Hero chart should show a DiD plot |
 | 2 | Experiment Designer: name/hypothesis, method, metric, true effect, sample size, duration, power check | Replace "Randomized A/B" with DiD design: treatment vs comparison group, pre/post periods, treatment start date, group baseline difference, trend difference, effect size, noise |
-| 3 | Simulation Playground: live results, cumulative conversion chart, incoming-user dots | Re-frame as treated vs comparison trajectories over time with the treatment start marked. **[TBD]** Is live day-by-day streaming kept, or is DiD simulated all at once? |
+| 3 | Simulation Playground: live results, cumulative conversion chart, incoming-user dots | **Built:** period-by-period playback (1×/4×/16×, pause, reset), interim DiD estimate and p-value, peeking warning, truth hidden until the end. Incoming-user dots not built |
 | 4 | Results Explorer: group comparison, effect CI, interpretation, repeated simulations, guardrails | Show DiD estimate with CI, 2x2 means table, parallel-trends diagnostic, ground-truth reveal. **[TBD]** Which tabs survive (Overview, Statistical analysis, Distributions, Repeated simulations, Segments) |
 | 5 | Lesson (Learn): lesson list, interactive exercise, quick check, key takeaway | Mockup lesson is "Randomization and control". Needs a DiD lesson sequence **[TBD]** |
 
@@ -41,8 +41,8 @@ Sidebar nav in the mockup: Home, Learn, Lab, Datasets, Templates, Results. **[TB
 ## 6. Design
 
 - Keep the mockup layout.
-- **Conflict to resolve:** the mockup is white/cool-grey with an **indigo/purple** accent. The brief asks for warm-neutral, greyer surfaces with **orange only as an accent**. **[TBD]** Confirm the brief's theme wins over the mockup colors.
-- Tokens as CSS variables so the theme changes in one place. The pasted mockup is too low-resolution to extract exact hex values. **[TBD]** Final palette and typography; need a higher-resolution export or the design file.
+- **Resolved:** follow the mockups (indigo accent, cool light surfaces) over the brief's warm grey + orange direction.
+- Tokens are CSS variables in `src/theme/tokens.css`, sampled from the full-resolution mockups; typography is Inter. Change the look in that one file.
 
 ## 7. Functional requirements
 

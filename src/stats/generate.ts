@@ -1,10 +1,14 @@
 import { createRng } from './rng'
 import type { Observation, SimDataset, SimParams } from './types'
 
+/** Upper bounds keep a mistyped value from freezing the browser. */
+export const MAX_UNITS_PER_GROUP = 500
+export const MAX_PERIODS = 60
+
 export function validateParams(p: SimParams): string[] {
   const errors: string[] = []
-  if (!Number.isInteger(p.unitsPerGroup) || p.unitsPerGroup < 2) errors.push('unitsPerGroup must be an integer >= 2')
-  if (!Number.isInteger(p.periods) || p.periods < 2) errors.push('periods must be an integer >= 2')
+  if (!Number.isInteger(p.unitsPerGroup) || p.unitsPerGroup < 2 || p.unitsPerGroup > MAX_UNITS_PER_GROUP) errors.push(`unitsPerGroup must be an integer from 2 to ${MAX_UNITS_PER_GROUP}`)
+  if (!Number.isInteger(p.periods) || p.periods < 2 || p.periods > MAX_PERIODS) errors.push(`periods must be an integer from 2 to ${MAX_PERIODS}`)
   if (!Number.isInteger(p.treatmentStart) || p.treatmentStart < 1 || p.treatmentStart > p.periods - 1)
     errors.push('treatmentStart must be an integer in [1, periods - 1]')
   if (!(p.noise >= 0)) errors.push('noise must be >= 0')

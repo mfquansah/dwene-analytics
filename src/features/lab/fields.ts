@@ -17,3 +17,12 @@ export const FIELDS: Field[] = [
   { key: 'trendDifference', label: 'Trend difference', help: 'Extra growth per period for treated units. Anything but 0 breaks parallel trends and biases the estimate.', step: 0.05 },
   { key: 'seed', label: 'Seed', help: 'Same seed, same data. Change it to draw a new sample.' },
 ]
+
+export const FIELD_BY_KEY = Object.fromEntries(FIELDS.map((f) => [f.key, f])) as Record<Field['key'], Field>
+
+/** Form sections, in order. Keys refer to FIELDS. */
+export const SECTIONS: Array<{ title: string; note?: string; chip?: string; keys: Field['key'][] }> = [
+  { title: 'Design the study', keys: ['unitsPerGroup', 'periods', 'treatmentStart'] },
+  { title: 'Set the true effect', note: 'The effect used to generate the simulated data. You will not see it while the experiment runs, just like in real life.', chip: 'Hidden until reveal', keys: ['effectSize', 'noise', 'baselineDifference', 'trendDifference'] },
+  { title: 'Reproducibility', keys: ['seed'] },
+]

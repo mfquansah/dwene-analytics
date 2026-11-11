@@ -19,7 +19,7 @@ _Last updated: 2026-11-11_
 | 2026-11-11 | Sandbox first entry: short guided walkthrough | User |
 | 2026-11-11 | Charts: Recharts. Router: React Router | User approved |
 | 2026-11-11 | Sandbox parameters: effect size, noise, baseline group difference, trend difference, units per group, periods, treatment start, seed | User approved |
-| 2026-11-11 | Theme: follow the mockups (indigo accent), overriding the brief's warm grey + orange | User |
+| 2026-11-11 | Theme: follow the mockups (indigo accent), overriding the brief's warm grey + orange. Tokens sampled from the full-resolution mockups into `src/theme/tokens.css`; Inter (self-hosted via npm) | User |
 | 2026-11-11 | Hosting: Vercel (static SPA), live at https://dwene-analytics.vercel.app/. `vercel.json` rewrites all routes to `index.html` | User |
 | 2026-11-11 | Lesson plan: five-lesson scenario-first DiD course (see `docs/CURRICULUM.md`) | User supplied |
 | 2026-11-11 | Lessons authored as typed TypeScript data rendered by one player, not MDX | Matches the user's schema; supersedes the earlier MDX proposal |
@@ -31,6 +31,10 @@ _Last updated: 2026-11-11_
 - Draft `docs/DEVELOPMENT_PLAN.md`.
 - Deployed to Vercel and verified live: first-visit walkthrough, designer, results, refresh on deep links, Learn lessons 3 and 4, local-storage progress, no console errors. Results match local runs exactly (seeded).
 - End-of-course challenge (P1): `did-challenge`, 3 cases, no hints, first-try scoring, revisit links, hidden-truth live study. Linked from lesson 5's summary and the Learn page.
+- Design pass from the five full-resolution mockups: tokens, Inter, icons (lucide), sidebar shell, Home (hero + example, Learn/Lab cards, recent experiments, methods library), Designer (numbered sections, method cards, right-hand Power check), Simulation Playground (new: period-by-period playback, interim estimate, peeking warning, ground-truth hidden until the end), Results (tabs, effect-size plot, interpretation cards, repeated simulations), Lesson player with course rail.
+- Power check: Monte Carlo over the real engine (t-based minimum detectable effect and units needed), tested against re-simulation.
+- Repeated simulations ('Try it many times'): re-runs the design with new seeds; shows estimate distribution, CI coverage and significance rate. Shows 0% coverage under a trend difference.
+- Study size limits (500 units per group, 60 periods) so a mistyped value cannot freeze the browser.
 - Phase 5: Learn module per `docs/CURRICULUM.md`: lesson schema, five interaction types, grading engine (tested), five lessons, course page, lesson player, saved progress, Lesson 4 'explore in the Lab' preset link. Verified in a real browser.
 - Phase 4: first-visit guided walkthrough on the Lab (5 steps: welcome, groups and periods, true effect and noise, parallel trends, run it). Highlights the relevant fields, skippable, closes on Escape, remembered in local storage, replayable from the Lab page. Step copy is a first draft to review.
 - Phases 2–3 (first cut): local-storage layer (versioned, corruption-safe), app shell, Experiment Designer, Results page (estimate, CI, trend chart with counterfactual and treatment marker, 2×2 means, parallel-trends check, interpretation, ground-truth reveal), Home. Verified in a real browser: run, reload persistence, validation, mobile layout.
@@ -38,6 +42,9 @@ _Last updated: 2026-11-11_
 - Phase 0: Vite + React + TS scaffold, Vitest, router shell, placeholder tokens.
 
 ## Still being explored
+
+- Mockup items deliberately not built (need a decision): Datasets and Templates nav (imply upload, out of scope for 1.0); Settings; persona footer (Taylor Kim; no accounts); Share and Export report; Results tabs 'Statistical analysis', 'Distributions', 'Segments'; Playground tabs 'Users', 'Event log' and the incoming-users dot strip; guardrail metrics and primary metric (A/B concepts with no DiD equivalent yet).
+- Product name: the mockups say 'Experiment Lab'; the app uses 'Dwene'.
 
 - Vercel production branch: repo currently has only the `claude/modest-johnson-1netix` branch; consider creating `main`.
 - Unknown asset URLs return the app shell with HTTP 200 (standard SPA rewrite behaviour); harmless for now.
