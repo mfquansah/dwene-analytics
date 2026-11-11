@@ -1,8 +1,22 @@
 import { useSyncExternalStore } from 'react'
-import type { Experiment, PersistedState } from './types'
+import type { Experiment, LessonProgress, PersistedState, StepStatus } from './types'
 
 export const STORAGE_KEY = 'dwene:state'
-const empty = (): PersistedState => ({ schemaVersion: 1, experiments: [], walkthroughSeen: false })
+const empty = (): PersistedState => ({ schemaVersion: 1, experiments: [], walkthroughSeen: false, lessonProgress: {} })
+
+const STATUSES = new Set<StepStatus>(['correct', 'revealed', 'done'])
+
+function parseProgress(raw: unknown): Record<string, LessonProgress> {
+  const out: Record<string, LessonProgress> = {}
+  if (typeof raw !== 'object' || raw === null) return out
+  for (const [lessonId, lp] of Object.entries(raw as Record<string, { steps?: unknown }>)) {
+    if (typeof lp?.steps !== 'object' || lp.steps === null) continue
+    const steps: Record<string, StepStatus> = {}
+    for (const [stepId, st] of Object.entries(lp.steps)) if (STATUSES.has(st as StepStatus)) steps[stepId] = st as StepStatus
+    out[lessonId] = { steps }
+  }
+  return out
+}
 
 /** Parse and validate stored JSON. Anything unrecognised falls back to an empty state. */
 export function parseState(raw: string | null): PersistedState {
@@ -13,7 +27,7 @@ export function parseState(raw: string | null): PersistedState {
     const experiments = v.experiments.filter(
       (e: Experiment) => typeof e?.id === 'string' && typeof e?.name === 'string' && typeof e?.params === 'object' && e.params !== null,
     )
-    return { schemaVersion: 1, experiments, walkthroughSeen: v.walkthroughSeen === true }
+    return { schemaVersion: 1, experiments, walkthroughSeen: v.walkthroughSeen === true, lessonProgress: parseProgress(v.lessonProgress) }
   } catch {
     return empty()
   }
@@ -51,6 +65,14 @@ export const store = {
   },
   deleteExperiment(id: string) {
     commit({ ...state, experiments: state.experiments.filter((e) => e.id !== id) })
+  },
+  recordStep(lessonId: string, stepId: string, status: StepStatus) {
+    const prev = state.lessonProgress[lessonId]?.steps ?? {}
+    commit({ ...state, lessonProgress: { ...state.lessonProgress, [lessonId]: { steps: { ...prev, [stepId]: status } } } })
+  },
+  resetLesson(lessonId: string) {
+    const { [lessonId]: _removed, ...rest } = state.lessonProgress
+    commit({ ...state, lessonProgress: rest })
   },
   setWalkthroughSeen(seen: boolean) {
     commit({ ...state, walkthroughSeen: seen })

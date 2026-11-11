@@ -10,8 +10,8 @@ export function Home() {
       <div className="grid2">
         <section className="card">
           <h2>Learn mode</h2>
-          <p className="muted">Guided lessons and exercises. Coming soon.</p>
-          <Link to="/learn" className="btn ghost">Open lessons</Link>
+          <p className="muted">Five short, hands-on lessons that start from a real business problem.</p>
+          <Link to="/learn" className="btn ghost">Start learning</Link>
         </section>
         <section className="card">
           <h2>Lab mode</h2>

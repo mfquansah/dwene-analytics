@@ -1,3 +1,5 @@
+import { Learn } from './features/learn/Learn'
+import { LessonPlayer } from './features/learn/LessonPlayer'
 import { Designer } from './features/lab/Designer'
 import { Home } from './features/home/Home'
 import { ResultsDetail, ResultsList } from './features/results/Results'
@@ -9,10 +11,6 @@ const nav = [
   { to: '/lab', label: 'Lab' },
   { to: '/results', label: 'Results' },
 ]
-
-function Placeholder({ title }: { title: string }) {
-  return <h1>{title}</h1>
-}
 
 export default function App() {
   return (
@@ -31,7 +29,8 @@ export default function App() {
         <main className="main">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/learn" element={<Placeholder title="Learn" />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/learn/:lessonId" element={<LessonPlayer />} />
             <Route path="/lab" element={<Designer />} />
             <Route path="/results" element={<ResultsList />} />
             <Route path="/results/:id" element={<ResultsDetail />} />

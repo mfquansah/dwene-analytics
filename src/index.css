@@ -76,3 +76,33 @@ input:focus-visible, .btn:focus-visible, a:focus-visible { outline: 2px solid va
 .tour-spot { scroll-margin-top: 96px; outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: var(--radius); background: color-mix(in srgb, var(--color-accent) 6%, transparent); }
 .linkbtn { font: inherit; background: none; border: 0; padding: 0; color: var(--color-accent); cursor: pointer; text-decoration: underline; }
 @media (max-width: 800px) { .tour { right: 16px; left: 16px; bottom: 16px; width: auto; max-width: none; } }
+
+.lesson-p { line-height: 1.6; }
+.scenario { background: var(--color-bg); border-radius: var(--radius); padding: 12px 14px; line-height: 1.5; }
+.lesson-q { font-weight: 600; margin: 12px 0 8px; display: block; }
+.lesson-table { max-width: 420px; margin: 8px 0 16px; }
+.lesson-table th.left { text-align: left; }
+.choices { border: 0; padding: 0; margin: 0 0 12px; }
+.choice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; margin-bottom: 8px; border: 1px solid var(--color-border); border-radius: var(--radius); cursor: pointer; line-height: 1.4; }
+.choice.selected { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 6%, transparent); }
+.choice input { margin-top: 3px; accent-color: var(--color-accent); }
+.hint { background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius); padding: 10px 12px; }
+.explain { background: var(--color-bg); border-radius: var(--radius); padding: 12px 14px; line-height: 1.5; }
+.notes { padding-left: 18px; line-height: 1.5; }
+.checklist { list-style: none; padding: 0; margin: 12px 0; }
+.small-big { font-size: 14px; }
+.progress { display: flex; gap: 6px; margin: 12px 0; }
+.dot { height: 6px; flex: 1; border-radius: 3px; background: var(--color-border); }
+.dot.done { background: color-mix(in srgb, var(--color-accent) 45%, var(--color-border)); }
+.dot.current { background: var(--color-accent); }
+.wrap { flex-wrap: wrap; }
+.lessons { list-style: none; padding: 0; margin: 0; }
+.lesson-card { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.lesson-card h2 { margin: 2px 0 4px; }
+.lesson-card p { margin: 0; }
+.concepts { margin: 0; }
+.concepts dt { font-weight: 600; margin-top: 8px; }
+.concepts dd { margin: 2px 0 0; color: var(--color-text-muted); }
+a.btn { text-decoration: none; }
+@media (max-width: 800px) { .lesson-card { flex-direction: column; align-items: stretch; } }
+input[type="range"] { accent-color: var(--color-accent); padding: 0; }

@@ -12,10 +12,10 @@ export function TrendChart({ series, treatmentStart, revealTruth }: { series: Tr
           <Tooltip formatter={(v) => (typeof v === 'number' ? v.toFixed(2) : String(v))} labelFormatter={(l) => `Period ${l}`} />
           <Legend verticalAlign="top" height={28} />
           <ReferenceLine x={treatmentStart - 0.5} stroke="var(--color-text-muted)" strokeDasharray="4 4" label={{ value: 'Treatment starts', position: 'insideTopLeft', fontSize: 11 }} />
-          <Line name="Treated" dataKey="treated" stroke="var(--color-treated)" strokeWidth={2} dot={{ r: 3 }} />
-          <Line name="Comparison" dataKey="comparison" stroke="var(--color-comparison)" strokeWidth={2} dot={{ r: 3 }} />
-          <Line name="Estimated counterfactual" dataKey="estimatedCounterfactual" stroke="var(--color-treated)" strokeDasharray="6 4" strokeWidth={2} dot={false} connectNulls />
-          {revealTruth && <Line name="True counterfactual" dataKey="trueCounterfactual" stroke="var(--color-success)" strokeDasharray="2 3" strokeWidth={2} dot={false} connectNulls />}
+          <Line name="Treated" dataKey="treated" stroke="var(--color-treated)" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false} />
+          <Line name="Comparison" dataKey="comparison" stroke="var(--color-comparison)" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false} />
+          <Line name="Estimated counterfactual" dataKey="estimatedCounterfactual" stroke="var(--color-treated)" strokeDasharray="6 4" strokeWidth={2} dot={false} connectNulls isAnimationActive={false} />
+          {revealTruth && <Line name="True counterfactual" dataKey="trueCounterfactual" stroke="var(--color-success)" strokeDasharray="2 3" strokeWidth={2} dot={false} connectNulls isAnimationActive={false} />}
         </LineChart>
       </ResponsiveContainer>
     </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { validateParams, type SimParams } from '../../stats'
 import { store, useAppState } from '../../storage/store'
 import { FIELDS } from './fields'
@@ -9,15 +9,24 @@ const randomSeed = () => Math.floor(Math.random() * 1_000_000)
 
 export function Designer() {
   const nav = useNavigate()
+  const [query] = useSearchParams()
   const { walkthroughSeen } = useAppState()
   const [replay, setReplay] = useState(false)
   const showTour = !walkthroughSeen || replay
   const closeTour = () => { setReplay(false); store.setWalkthroughSeen(true) }
   const [name, setName] = useState('')
   const [hypothesis, setHypothesis] = useState('')
-  const [vals, setVals] = useState<Record<string, string>>({
-    unitsPerGroup: '20', periods: '12', treatmentStart: '6', effectSize: '2',
-    noise: '1.5', baselineDifference: '3', trendDifference: '0', seed: String(randomSeed()),
+  const [vals, setVals] = useState<Record<string, string>>(() => {
+    const defaults: Record<string, string> = {
+      unitsPerGroup: '20', periods: '12', treatmentStart: '6', effectSize: '2',
+      noise: '1.5', baselineDifference: '3', trendDifference: '0', seed: String(randomSeed()),
+    }
+    // Presets (e.g. from a lesson) arrive as query params; ignore anything that is not a finite number.
+    for (const f of FIELDS) {
+      const q = query.get(f.key)
+      if (q !== null && q.trim() !== '' && Number.isFinite(Number(q))) defaults[f.key] = q
+    }
+    return defaults
   })
 
   const params: SimParams = {

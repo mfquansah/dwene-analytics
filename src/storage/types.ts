@@ -9,8 +9,16 @@ export interface Experiment {
   createdAt: string
 }
 
+/** 'correct' = answered right; 'revealed' = learner asked to see the answer; 'done' = read/explored step finished. */
+export type StepStatus = 'correct' | 'revealed' | 'done'
+
+export interface LessonProgress {
+  steps: Record<string, StepStatus>
+}
+
 export interface PersistedState {
   schemaVersion: 1
   experiments: Experiment[]
   walkthroughSeen: boolean
+  lessonProgress: Record<string, LessonProgress>
 }
