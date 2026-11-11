@@ -69,3 +69,10 @@ input:focus-visible, .btn:focus-visible, a:focus-visible { outline: 2px solid va
   .main { padding: 16px; }
   .grid2, .stats { grid-template-columns: 1fr; }
 }
+
+.tour { position: fixed; right: 24px; bottom: 24px; width: 340px; max-width: calc(100vw - 32px); background: var(--color-surface); border: 1px solid var(--color-accent); border-radius: var(--radius); padding: 16px; box-shadow: 0 8px 28px rgba(17, 24, 39, .18); z-index: 10; }
+.tour h3 { margin: 4px 0 6px; font-size: 16px; }
+.tour p { margin: 0 0 14px; line-height: 1.5; }
+.tour-spot { scroll-margin-top: 96px; outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: var(--radius); background: color-mix(in srgb, var(--color-accent) 6%, transparent); }
+.linkbtn { font: inherit; background: none; border: 0; padding: 0; color: var(--color-accent); cursor: pointer; text-decoration: underline; }
+@media (max-width: 800px) { .tour { right: 16px; left: 16px; bottom: 16px; width: auto; max-width: none; } }

@@ -27,6 +27,7 @@ _Last updated: 2026-11-11_
 - Repo inspected: empty, no prior code.
 - Draft `docs/PRD.md` (open items flagged).
 - Draft `docs/DEVELOPMENT_PLAN.md`.
+- Phase 4: first-visit guided walkthrough on the Lab (5 steps: welcome, groups and periods, true effect and noise, parallel trends, run it). Highlights the relevant fields, skippable, closes on Escape, remembered in local storage, replayable from the Lab page. Step copy is a first draft to review.
 - Phases 2–3 (first cut): local-storage layer (versioned, corruption-safe), app shell, Experiment Designer, Results page (estimate, CI, trend chart with counterfactual and treatment marker, 2×2 means, parallel-trends check, interpretation, ground-truth reveal), Home. Verified in a real browser: run, reload persistence, validation, mobile layout.
 - Phase 1: stats core (`src/stats`): seeded generator, DiD estimator with unit-clustered SEs, parallel-trends test; 30 tests incl. cross-check against statsmodels.
 - Phase 0: Vite + React + TS scaffold, Vitest, router shell, placeholder tokens.
@@ -34,7 +35,8 @@ _Last updated: 2026-11-11_
 ## Still being explored
 
 - Hosting provider (needs GitHub push working first). SPA routes need a rewrite rule to `index.html` on the chosen host.
-- Not yet built: guided walkthrough (Phase 4, steps TBD), Learn module (lesson plan TBD), repeated simulations, day-by-day playback, Datasets/Templates nav (omitted from the sidebar for now since upload is out of scope).
+- Walkthrough copy and steps are a proposal; user to review.
+- Not yet built: Learn module (lesson plan TBD), repeated simulations, day-by-day playback, Datasets/Templates nav (omitted from the sidebar for now since upload is out of scope).
 - Production bundle is ~700 kB (Recharts); fine for a PoC, optimise later if needed.
 
 - Added optional generator parameters beyond the approved list, defaulted so the approved list still works alone: `commonTrend` (0.5), `baselineLevel` (10), `unitEffectSd` (0). Confirm or remove.
