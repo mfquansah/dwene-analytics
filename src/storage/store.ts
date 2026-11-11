@@ -4,7 +4,7 @@ import type { Experiment, LessonProgress, PersistedState, StepStatus } from './t
 export const STORAGE_KEY = 'dwene:state'
 const empty = (): PersistedState => ({ schemaVersion: 1, experiments: [], walkthroughSeen: false, lessonProgress: {} })
 
-const STATUSES = new Set<StepStatus>(['correct', 'revealed', 'done'])
+const STATUSES = new Set<StepStatus>(['first-try', 'correct', 'revealed', 'done'])
 
 function parseProgress(raw: unknown): Record<string, LessonProgress> {
   const out: Record<string, LessonProgress> = {}

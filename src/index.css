@@ -106,3 +106,4 @@ input:focus-visible, .btn:focus-visible, a:focus-visible { outline: 2px solid va
 a.btn { text-decoration: none; }
 @media (max-width: 800px) { .lesson-card { flex-direction: column; align-items: stretch; } }
 input[type="range"] { accent-color: var(--color-accent); padding: 0; }
+.challenge-card { margin-top: 24px; border-color: var(--color-accent); }

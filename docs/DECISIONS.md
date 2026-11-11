@@ -30,6 +30,7 @@ _Last updated: 2026-11-11_
 - Draft `docs/PRD.md` (open items flagged).
 - Draft `docs/DEVELOPMENT_PLAN.md`.
 - Deployed to Vercel and verified live: first-visit walkthrough, designer, results, refresh on deep links, Learn lessons 3 and 4, local-storage progress, no console errors. Results match local runs exactly (seeded).
+- End-of-course challenge (P1): `did-challenge`, 3 cases, no hints, first-try scoring, revisit links, hidden-truth live study. Linked from lesson 5's summary and the Learn page.
 - Phase 5: Learn module per `docs/CURRICULUM.md`: lesson schema, five interaction types, grading engine (tested), five lessons, course page, lesson player, saved progress, Lesson 4 'explore in the Lab' preset link. Verified in a real browser.
 - Phase 4: first-visit guided walkthrough on the Lab (5 steps: welcome, groups and periods, true effect and noise, parallel trends, run it). Highlights the relevant fields, skippable, closes on Escape, remembered in local storage, replayable from the Lab page. Step copy is a first draft to review.
 - Phases 2–3 (first cut): local-storage layer (versioned, corruption-safe), app shell, Experiment Designer, Results page (estimate, CI, trend chart with counterfactual and treatment marker, 2×2 means, parallel-trends check, interpretation, ground-truth reveal), Home. Verified in a real browser: run, reload persistence, validation, mobile layout.
@@ -48,7 +49,7 @@ _Last updated: 2026-11-11_
 - Estimator choices to confirm: SEs clustered by unit with t(G-1) inference (matches Stata/statsmodels); parallel-trends test is a pre-period slope-difference test (not proof of parallel trends).
 
 - Lesson wording is a first draft written to the curriculum; user to review for tone and accuracy.
-- Not yet built: end-of-course independent challenge (P1); Lab presets only exist for Lesson 4.
+- Challenge scoring thresholds and pass/fail messaging are a first draft; there is no pass mark. Lab presets only exist for Lesson 4.
 - Lessons 1–3 use illustrative averages, not live simulations; only Lesson 4 runs the real engine.
 - Hosting (proposed: static host; not yet confirmed)
 - Exact design token values (need higher-res mockups or design file)

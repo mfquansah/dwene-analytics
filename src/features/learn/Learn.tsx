@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useAppState } from '../../storage/store'
-import { DID_COURSE } from './content/didCourse'
-import { isLessonComplete } from './grading'
+import { DID_CHALLENGE, DID_COURSE } from './content'
+import { challengeScore, isLessonComplete } from './grading'
 
 export function Learn() {
   const { lessonProgress } = useAppState()
@@ -29,6 +29,27 @@ export function Learn() {
           )
         })}
       </ol>
+      <Challenge />
     </div>
+  )
+}
+
+function Challenge() {
+  const { lessonProgress } = useAppState()
+  const steps = lessonProgress[DID_CHALLENGE.lessonId]?.steps ?? {}
+  const count = DID_CHALLENGE.steps.filter((s) => steps[s.id]).length
+  const isDone = isLessonComplete(DID_CHALLENGE, steps)
+  const score = challengeScore(DID_CHALLENGE, steps)
+  const course = DID_COURSE.filter((l) => isLessonComplete(l, lessonProgress[l.lessonId]?.steps)).length
+  const status = isDone ? `Complete: ${score.firstTry} of ${score.graded} on the first try` : count > 0 ? `${count} of ${DID_CHALLENGE.steps.length} steps` : course === DID_COURSE.length ? 'Ready' : 'Best after lesson 5'
+  return (
+    <section className="card lesson-card challenge-card" aria-labelledby="challenge-title">
+      <div>
+        <div className="muted small">Final challenge · {DID_CHALLENGE.durationMinutes} min · {status}</div>
+        <h2 id="challenge-title">{DID_CHALLENGE.title}</h2>
+        <p className="muted">{DID_CHALLENGE.objective}</p>
+      </div>
+      <Link to={`/learn/${DID_CHALLENGE.lessonId}`} className={`btn ${isDone ? 'ghost' : 'primary'}`}>{isDone ? 'Review' : count > 0 ? 'Continue' : 'Start'}</Link>
+    </section>
   )
 }

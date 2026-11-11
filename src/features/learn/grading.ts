@@ -1,5 +1,5 @@
 import type { StepStatus } from '../../storage/types'
-import type { ChoiceStep, Lesson, NumericStep, Requirement, SimulationStep } from './types'
+import type { ChoiceStep, Lesson, NumericStep, Requirement, SimulationStep, Step } from './types'
 
 export function gradeChoice(step: ChoiceStep, answerId: string): boolean {
   return answerId === step.correct
@@ -43,4 +43,23 @@ export const isLessonComplete = (lesson: Lesson, steps: Record<string, StepStatu
 export function firstIncomplete(lesson: Lesson, steps: Record<string, StepStatus> | undefined): number {
   const i = lesson.steps.findIndex((s) => steps?.[s.id] === undefined)
   return i === -1 ? lesson.steps.length - 1 : i
+}
+
+/** In challenge mode a wrong answer gets no hint; the answer can be shown after this many misses. */
+export const CHALLENGE_REVEAL_AFTER = 2
+export const canRevealInChallenge = (wrongAttempts: number): boolean => wrongAttempts >= CHALLENGE_REVEAL_AFTER
+
+export const isGraded = (s: Step): s is ChoiceStep | NumericStep => s.kind === 'choice' || s.kind === 'numeric'
+
+export interface ChallengeScore {
+  firstTry: number
+  graded: number
+  /** Graded steps not answered correctly on the first try. */
+  missed: Array<ChoiceStep | NumericStep>
+}
+
+export function challengeScore(lesson: Lesson, steps: Record<string, StepStatus> | undefined): ChallengeScore {
+  const graded = lesson.steps.filter(isGraded)
+  const missed = graded.filter((s) => steps?.[s.id] !== 'first-try')
+  return { firstTry: graded.length - missed.length, graded: graded.length, missed }
 }

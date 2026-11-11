@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { canReveal, firstIncomplete, gradeChoice, gradeNumeric, hintFor, isLessonComplete, parseNumber, requirementMet, simulationComplete } from './grading'
+import { canReveal, canRevealInChallenge, challengeScore, firstIncomplete, gradeChoice, gradeNumeric, hintFor, isLessonComplete, parseNumber, requirementMet, simulationComplete } from './grading'
 import type { ChoiceStep, Lesson, NumericStep, SimulationStep } from './types'
 
 const num = { kind: 'numeric', id: 'n', title: '', prompt: '', correct: 10, tolerance: 0.5, hints: [], explanation: '' } as NumericStep
@@ -54,4 +54,19 @@ test('lesson completion and resume point', () => {
   expect(isLessonComplete(lesson, { a: 'done', b: 'correct' })).toBe(false)
   expect(isLessonComplete(lesson, { a: 'done', b: 'correct', c: 'revealed' })).toBe(true)
   expect(firstIncomplete(lesson, { a: 'done', b: 'correct', c: 'revealed' })).toBe(2)
+})
+
+test('challenge scoring counts only first-try answers and lists the misses', () => {
+  const lesson = { steps: [
+    { id: 'i', kind: 'read' }, { id: 'a', kind: 'choice' }, { id: 'b', kind: 'numeric' }, { id: 'c', kind: 'choice' }, { id: 's', kind: 'study' },
+  ] } as unknown as Lesson
+  const r = challengeScore(lesson, { i: 'done', a: 'first-try', b: 'correct', c: 'revealed', s: 'done' })
+  expect(r.graded).toBe(3)
+  expect(r.firstTry).toBe(1)
+  expect(r.missed.map((m) => m.id)).toEqual(['b', 'c'])
+  expect(challengeScore(lesson, undefined).firstTry).toBe(0)
+})
+
+test('challenge reveal is offered only after two misses', () => {
+  expect([0, 1, 2, 3].map(canRevealInChallenge)).toEqual([false, false, true, true])
 })

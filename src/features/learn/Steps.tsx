@@ -4,13 +4,15 @@ import type { StepStatus } from '../../storage/types'
 import { TrendChart } from '../results/Chart'
 import { buildTrendSeries } from '../results/series'
 import { ExploreChart } from './ExploreChart'
-import { canReveal, gradeChoice, gradeNumeric, hintFor, parseNumber, requirementMet, simulationComplete } from './grading'
-import type { ChoiceStep, ExploreStep, NumericStep, ReadStep, SimulationStep, TableSpec, ChartSpec } from './types'
+import { canReveal, canRevealInChallenge, gradeChoice, gradeNumeric, hintFor, parseNumber, requirementMet, simulationComplete } from './grading'
+import type { ChoiceStep, ExploreStep, NumericStep, ReadStep, SimulationStep, StudyStep, TableSpec, ChartSpec } from './types'
 
 interface StepProps<T> {
   step: T
   status: StepStatus | undefined
   onDone: (s: StepStatus) => void
+  /** Challenge mode: no hints; scored on first attempts. */
+  challenge?: boolean
 }
 
 function Table({ table }: { table: TableSpec }) {
@@ -44,7 +46,7 @@ export function ReadView({ step }: StepProps<ReadStep>) {
 function Feedback({ status, explanation, hint, wrong }: { status?: StepStatus; explanation: string; hint: string | null; wrong: boolean }) {
   return (
     <div aria-live="polite">
-      {status === 'correct' && <p className="ok">Correct.</p>}
+      {(status === 'correct' || status === 'first-try') && <p className="ok">Correct.</p>}
       {status === 'revealed' && <p className="warn">Here is the answer.</p>}
       {!status && wrong && <p className="warn">Not quite.</p>}
       {!status && hint && <p className="hint">Hint: {hint}</p>}
@@ -53,12 +55,12 @@ function Feedback({ status, explanation, hint, wrong }: { status?: StepStatus; e
   )
 }
 
-export function ChoiceView({ step, status, onDone }: StepProps<ChoiceStep>) {
+export function ChoiceView({ step, status, onDone, challenge }: StepProps<ChoiceStep>) {
   const [sel, setSel] = useState<string | null>(status ? step.correct : null)
   const [wrong, setWrong] = useState(0)
   const check = () => {
     if (!sel) return
-    if (gradeChoice(step, sel)) onDone('correct')
+    if (gradeChoice(step, sel)) onDone(challenge && wrong === 0 ? 'first-try' : 'correct')
     else setWrong(wrong + 1)
   }
   return (
@@ -76,15 +78,15 @@ export function ChoiceView({ step, status, onDone }: StepProps<ChoiceStep>) {
       {!status && (
         <div className="row">
           <button className="btn primary" disabled={!sel} onClick={check}>Check answer</button>
-          {canReveal(step.hints, wrong) && <button className="btn ghost" onClick={() => onDone('revealed')}>Show the answer</button>}
+          {(challenge ? canRevealInChallenge(wrong) : canReveal(step.hints, wrong)) && <button className="btn ghost" onClick={() => onDone('revealed')}>Show the answer</button>}
         </div>
       )}
-      <Feedback status={status} explanation={step.explanation} hint={hintFor(step.hints, wrong)} wrong={wrong > 0} />
+      <Feedback status={status} explanation={step.explanation} hint={challenge ? null : hintFor(step.hints, wrong)} wrong={wrong > 0} />
     </>
   )
 }
 
-export function NumericView({ step, status, onDone }: StepProps<NumericStep>) {
+export function NumericView({ step, status, onDone, challenge }: StepProps<NumericStep>) {
   const [raw, setRaw] = useState(status ? String(step.correct) : '')
   const [wrong, setWrong] = useState(0)
   const [invalid, setInvalid] = useState(false)
@@ -92,7 +94,7 @@ export function NumericView({ step, status, onDone }: StepProps<NumericStep>) {
     const v = parseNumber(raw)
     setInvalid(v === null)
     if (v === null) return
-    if (gradeNumeric(step, v)) onDone('correct')
+    if (gradeNumeric(step, v)) onDone(challenge && wrong === 0 ? 'first-try' : 'correct')
     else setWrong(wrong + 1)
   }
   return (
@@ -110,10 +112,10 @@ export function NumericView({ step, status, onDone }: StepProps<NumericStep>) {
       {!status && (
         <div className="row">
           <button className="btn primary" disabled={raw.trim() === ''} onClick={check}>Check answer</button>
-          {canReveal(step.hints, wrong) && <button className="btn ghost" onClick={() => onDone('revealed')}>Show the answer</button>}
+          {(challenge ? canRevealInChallenge(wrong) : canReveal(step.hints, wrong)) && <button className="btn ghost" onClick={() => onDone('revealed')}>Show the answer</button>}
         </div>
       )}
-      <Feedback status={status} explanation={step.explanation} hint={hintFor(step.hints, wrong)} wrong={wrong > 0} />
+      <Feedback status={status} explanation={step.explanation} hint={challenge ? null : hintFor(step.hints, wrong)} wrong={wrong > 0} />
     </>
   )
 }
@@ -181,6 +183,36 @@ export function SimulationView({ step, status, onDone }: StepProps<SimulationSte
         })}
       </ul>
       {status && <p className="explain">{step.explanation}</p>}
+    </>
+  )
+}
+
+const fmt = (v: number) => v.toFixed(2)
+const fmtP = (p: number) => (p < 0.001 ? '< 0.001' : p.toFixed(3))
+
+/** A live simulated study, shown like a real analysis. The truth is hidden unless `revealTruth`. */
+export function StudyView({ step }: StepProps<StudyStep>) {
+  const calc = useMemo(() => {
+    const ds = generateData(step.params)
+    return { ds, did: estimateDiD(ds.data), pt: testParallelTrends(ds.data), series: buildTrendSeries(ds) }
+  }, [step.params])
+  const { ds, did, pt, series } = calc
+  const e = did.effect
+  return (
+    <>
+      {step.body.map((p, i) => <p key={i} className="lesson-p">{p}</p>)}
+      <TrendChart series={series} treatmentStart={ds.params.treatmentStart} revealTruth={step.revealTruth} />
+      <div className="stats">
+        <div className="card stat"><div className="muted small">DiD estimate</div><div className="big">{fmt(e.estimate)}</div></div>
+        <div className="card stat"><div className="muted small">95% interval</div><div className="big small-big">{fmt(e.ci95[0])} to {fmt(e.ci95[1])}</div></div>
+        <div className="card stat"><div className="muted small">p-value</div><div className="big">{fmtP(e.p)}</div></div>
+        <div className="card stat"><div className="muted small">Pre-trend check</div><div className="big small-big">{pt ? (pt.violated ? 'Flags a difference' : 'No difference found') : 'n/a'}</div></div>
+      </div>
+      {step.revealTruth && (
+        <p className="explain">
+          True effect: <b>{fmt(ds.truth.trueEffect)}</b>. The estimate was <b>{fmt(e.estimate)}</b>, off by <b>{fmt(e.estimate - ds.truth.trueEffect)}</b>, and the interval {e.ci95[0] <= ds.truth.trueEffect && ds.truth.trueEffect <= e.ci95[1] ? 'contains' : 'does not contain'} the truth. Treated districts were growing {fmt(ds.params.trendDifference)} per period faster even without the lanes.
+        </p>
+      )}
     </>
   )
 }

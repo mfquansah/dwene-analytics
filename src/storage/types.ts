@@ -9,8 +9,11 @@ export interface Experiment {
   createdAt: string
 }
 
-/** 'correct' = answered right; 'revealed' = learner asked to see the answer; 'done' = read/explored step finished. */
-export type StepStatus = 'correct' | 'revealed' | 'done'
+/**
+ * 'first-try' = right on the first attempt (challenge scoring); 'correct' = right after retries;
+ * 'revealed' = learner asked to see the answer; 'done' = read/explored step finished.
+ */
+export type StepStatus = 'first-try' | 'correct' | 'revealed' | 'done'
 
 export interface LessonProgress {
   steps: Record<string, StepStatus>

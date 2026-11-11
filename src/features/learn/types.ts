@@ -47,6 +47,8 @@ export interface ChoiceStep extends StepBase {
   /** Progressive hints, shown one per wrong attempt. */
   hints: string[]
   explanation: string
+  /** Challenge only: the lesson to revisit if this is missed. */
+  reviewLessonId?: string
 }
 
 export interface NumericStep extends StepBase {
@@ -58,6 +60,7 @@ export interface NumericStep extends StepBase {
   unit?: string
   hints: string[]
   explanation: string
+  reviewLessonId?: string
 }
 
 export interface ExploreLayer {
@@ -104,10 +107,20 @@ export interface SimulationStep extends StepBase {
   explanation: string
 }
 
-export type Step = ReadStep | ChoiceStep | NumericStep | ExploreStep | SimulationStep
+/** A live simulated study shown as a real analyst would see it. Hides the truth unless `revealTruth`. */
+export interface StudyStep extends StepBase {
+  kind: 'study'
+  body: string[]
+  params: SimParams
+  revealTruth: boolean
+}
+
+export type Step = StudyStep | ReadStep | ChoiceStep | NumericStep | ExploreStep | SimulationStep
 
 export interface Lesson {
   lessonId: string
+  /** 'challenge': no hints, scored on first attempts. */
+  mode?: 'lesson' | 'challenge'
   title: string
   durationMinutes: number
   objective: string

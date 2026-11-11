@@ -17,9 +17,9 @@ describe('parseState', () => {
   test('keeps valid lesson progress, drops unknown statuses and malformed entries', () => {
     const raw = JSON.stringify({
       schemaVersion: 1, experiments: [],
-      lessonProgress: { l3: { steps: { a: 'correct', b: 'bogus', c: 'revealed' } }, l4: 'nope', l5: null },
+      lessonProgress: { l3: { steps: { a: 'correct', b: 'bogus', c: 'revealed', d: 'first-try' } }, l4: 'nope', l5: null },
     })
-    expect(parseState(raw).lessonProgress).toEqual({ l3: { steps: { a: 'correct', c: 'revealed' } } })
+    expect(parseState(raw).lessonProgress).toEqual({ l3: { steps: { a: 'correct', c: 'revealed', d: 'first-try' } } })
   })
   test('state saved before lesson progress existed still loads', () => {
     expect(parseState('{"schemaVersion":1,"experiments":[]}').lessonProgress).toEqual({})
